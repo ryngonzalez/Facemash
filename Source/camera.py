@@ -21,6 +21,7 @@ class Camera:
 
 	def optimize(self):
 		image = cv.QueryFrame(self.capture)
+		cv.Flip(image, None, 1)
 		image_scale = 4
 		# Set the image properties of the created images
 		pixel_depth, channels = 8, 1
@@ -71,9 +72,9 @@ class Camera:
 		if self.faces:
 			for face in self.faces:
 				cv.Rectangle(image, (face[0][0] * self.image_scale,face[0][1] * self.image_scale),
-							 		(((face[0][0] + face[0][2]) * self.image_scale),
-							 		  (face[0][1] + face[0][3]) * self.image_scale), 
-							 		  cv.RGB(255, 0, 0), 3, 8, 0)
+									(((face[0][0] + face[0][2]) * self.image_scale),
+									  (face[0][1] + face[0][3]) * self.image_scale), 
+									  cv.RGB(255, 0, 0), 3, 8, 0)
 				if self.side(face) == expression.side:
 					if expression.score < expression.threshold:
 						expression.increment()

@@ -27,24 +27,25 @@ def main():
 	pygame.init()
 	screen = pygame.display.set_mode((640,480))
 	image = Camera()
+	expression = Expression()
 	while True:
-		image.optimize()
-		image.loadCascades()
-		image.detectFace()
-		faces = image.faces
-		if faces:
-			for ((x, y, w, h), n) in faces:
-				pt1 = (int(x * image.image_scale), int(y * image.image_scale))
-				pt2 = (int((x + w) * image.image_scale), int((y + h) * image.image_scale))
-				h = h * image.image_scale
-				w = w * image.image_scale
-				cv.Rectangle(image.image, pt1, pt2, cv.RGB(255, 0, 0), 3, 8, 0)
-		image.convert_to_pygame()
-		screen.blit(image.image, (0,0))
-		pygame.display.flip()
+		expression.choose()
+		is_correct = False
+		lobster = pygame.font.match_font('lobster1.4')
+		font = pygame.font.Font(lobster, 36)
+		text = font.render(expression.expression + " on the " + expression.side, 1, (255,255,255))
+		textpos = text.get_rect()
+		textpos = text.get_rect(centerx=screen.get_width()/2)
+		while not is_correct:
+			is_correct = image.detectExpression(expression)
+			#print expression.score
+			image.render(text, textpos)
+			pygame.display.flip()
 		event = pygame.event.poll()
+		pygame.display.flip()
 		if event.type == pygame.QUIT:
 			break
+
 
 # Run the main program now.			
 if __name__ == "__main__":
