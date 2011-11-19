@@ -25,8 +25,8 @@ def main():
 			#print expression.score
 			image.render(text, textpos)
 			pygame.display.flip()
+			event = pygame.event.poll()
 			if event.type == pygame.QUIT:
-				break
 				break
 		event = pygame.event.poll()
 		pygame.display.flip()

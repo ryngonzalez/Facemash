@@ -5,14 +5,18 @@
 #
 
 import pygame
+import numpy
 import cv
 from expression import *
 import random
+import kalman
 
 class Camera:
 	def __init__(self):
 		self.capture = cv.CreateCameraCapture(0)
 		self.loadCascades()
+		self.numFaces = 0
+		self.face_locations = []
 
 	def optimize(self):
 		image = cv.QueryFrame(self.capture)
@@ -30,6 +34,30 @@ class Camera:
 		self.image_scale = image_scale
 		self.small = small
 		self.image = image
+	
+	def edges(self, image):
+		gray = cv.CreateImage(cv.GetSize(image), 8, image.nChannels)
+		cv.CvtColor(image, gray, cv.CV_BGR2GRAY)
+		edges = cv.CreateImage(cv.GetSize(image), 8, image.nChannels)
+		cv.Canny(gray,edges,60,60)
+		
+		return edges	
+	
+	def rectangle(self, image, d, thickness, color="white"):
+		colors = { 	"white"	:(255,255,255),
+					"black"	:(0,0,0),
+					"red"	:(255,69,49),
+					"green"	:(165,255,49),
+					"blue"	:(41,89,214)   }
+		cv.Rectangle(image, (d[0][0] * self.image_scale,d[0][1] * self.image_scale),
+							(((d[0][0] + d[0][2]) * self.image_scale),
+							( (d[0][1] + d[0][3]) * self.image_scale)), 
+							  cv.RGB(colors[color][0], colors[color][1], colors[color][2]), thickness, cv.CV_AA, 0)
+
+	def getRegion(self, image, x, y, width, height):
+		final = cv.CreateImage( (int(width), int(height)), image.depth, image.nChannels)
+		cv.GetRectSubPix(image, final, (x + width / 2, y +height / 2))
+		return final
 			
 	def detect(self, cascade, min_size):
 		haar_scale = 1.1
@@ -46,10 +74,10 @@ class Camera:
 		self.right_eye 	= self.detect(self.left_eyeCascade, (18,12))
 		
 	def detectNose(self):
-		self.nose = detect(self.nose_cascade,(25,15))
+		self.nose = self.detect(self.nose_cascade,(25,15))
 	
 	def detectMouth(self):
-		self.mouth = detect(self.mouth_cascade,(25,25))		 
+		self.mouth = self.detect(self.mouth_cascade,(25,15))		 
 		
 	def loadCascades(self):
 		self.faceCascade 		= cv.Load("Assets/Cascades/face.xml")
@@ -62,14 +90,10 @@ class Camera:
 	def detectExpression(self, expression):
 		self.optimize()		
 		self.detectFace()
-		image_scale = self.image_scale
 		image = self.image				
 		if self.faces:
 			for face in self.faces:
-				cv.Rectangle(image, (face[0][0] * self.image_scale,face[0][1] * self.image_scale),
-									(((face[0][0] + face[0][2]) * self.image_scale),
-									  (face[0][1] + face[0][3]) * self.image_scale), 
-									  cv.RGB(255, 0, 0), 3, 8, 0)
+				self.rectangle(image, face, 1, "green")
 				if self.side(face) == expression.side:
 					if expression.score < expression.threshold:
 						expression.increment()
@@ -102,9 +126,10 @@ class Camera:
 			return False
 	
 
-	def render(self, text, textpos):
+	def render(self, text=None, textpos=None):
 		self.convert_to_pygame()
-		self.image.blit(text, textpos)
+		if text and textpos:
+			self.image.blit(text, textpos)
 		pygame.display.get_surface().blit(self.image, (0,0))
 
 
