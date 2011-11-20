@@ -14,7 +14,7 @@ def main():
 	 	#print mat[0,0]
 		image.render()
 		event = pygame.event.poll()
-		cv.ShowImage("camera", image.edges)
+		#cv.ShowImage("camera", image.edges)
 		pygame.display.flip()
 		if event.type == pygame.QUIT:
 			break
