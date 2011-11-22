@@ -14,15 +14,15 @@ fonts = {
 		}
 
 positions = {
-				'top_left'		:(25, 25),
+				'top_left'		:(65, 25),
 				'top_center'	:(camera_resolution[0]/2, 25),
-				'top_right'		:(camera_resolution[0]-25, 25),
-				'middle_left'	:(25, camera_resolution[1]/2),	
+				'top_right'		:(camera_resolution[0]-65, 25),
+				'middle_left'	:(65, camera_resolution[1]/2),	
 				'middle_center'	:(camera_resolution[0]/2, camera_resolution[1]/2),
-				'middle_right'	:(camera_resolution[0]-25, camera_resolution[1]/2),
-				'bottom_left'	:(25, camera_resolution[1]-25),
+				'middle_right'	:(camera_resolution[0]-65, camera_resolution[1]/2),
+				'bottom_left'	:(65, camera_resolution[1]-25),
 				'bottom_center'	:(camera_resolution[0]/2, camera_resolution[1]-25),
-				'bottom_right'	:(camera_resolution[0]-25, camera_resolution[1]-25)
+				'bottom_right'	:(camera_resolution[0]-65, camera_resolution[1]-65)
 			}
 
 colors = {
@@ -34,13 +34,26 @@ colors = {
 		 }
 
 overlays = 	{
-				"Happy"		:"smile.png",
-				"Sad"		:"frown.png",
-				"Content"	:"content.png",
-				"Angry"		:"angry.png",
-				"Surprised"	:"surprised.png"
+				"Happy"		:"Assets/Overlays/smile.png",
+				"Sad"		:"Assets/Overlays/frown.png",
+				"Content"	:"Assets/Overlays/content.png",
+				"Angry"		:"Assets/Overlays/angry.png",
+				"Surprised"	:"Assets/Overlays/surprised.png",
+				"box"		:"Assets/Overlays/box.png"
 			}
 
 expressions = ["Happy", "Sad", "Surprised", "Content", "Angry"]
 
+stickers = 	{
+				"bear"	:"Assets/Stickers/bear.png",
+				"bow"	:"Assets/Stickers/bow.png",
+				"cake"	:"Assets/Stickers/cake.png",
+				"box"	:"Assets/Overlays/box.png"
+			}
+
+sticker = "bear"
+color 	= "red"
+music 	= "nyancat.wav"	
+time 	= 9000 
+threshold = 20 
 # state = 0			
